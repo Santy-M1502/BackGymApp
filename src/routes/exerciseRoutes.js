@@ -1,12 +1,12 @@
 import {Router} from 'express';
 
-import{
+const {
     getAllExercises,
     getExerciseBy,
     postExercise,
     putExercise,
     deleteExercise
-}  from '../controllers/exerciseController.js'
+}  = require('../controllers/exerciseController.js') 
 
 const router = Router();
 

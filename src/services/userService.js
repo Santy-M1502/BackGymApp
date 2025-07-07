@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const Plan = require('../models/plan');
 
 exports.getAllUsers = async () => {
   return await User.findAll({ include: Plan });
