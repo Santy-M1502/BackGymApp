@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 // Middlewares
 app.use(cors());
 app.use(morgan('dev'));
-app.use(json());
+app.use(express.json())
 
 const sequelize = require('./config/db');
 
@@ -26,7 +26,7 @@ sequelize.sync({ alter: true })
   .then(() => console.log('Modelos sincronizados con la base de datos'));
 
 // Rutas
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/exercise', exerciseRoutes);
 app.use('/api/plan', planRoutes);
 app.use('/api/history', historyRoutes);

@@ -1,23 +1,22 @@
-import {Router} from 'express';
+const express = require('express');
+const router = express.Router();
 
 const {
     getAllExercises,
     getExerciseBy,
-    postExercise,
-    putExercise,
+    createExercise,
+    updateExercise,
     deleteExercise
 }  = require('../controllers/exerciseController.js') 
-
-const router = Router();
 
 router.get('/', getAllExercises)
 
 router.get('/:id', getExerciseBy)
 
-router.post('/', postExercise)
+router.post('/', createExercise)
 
-router.put('/:id', putExercise)
+router.put('/:id', updateExercise)
 
 router.delete('/:id', deleteExercise)
 
-export default router
+module.exports = router

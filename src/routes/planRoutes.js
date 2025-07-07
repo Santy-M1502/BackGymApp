@@ -1,23 +1,22 @@
-import {Router} from 'express';
+const express = require('express');
+const router = express.Router();
 
-import{
+const {
     getAllPlans,
     getPlanBy,
-    postPlan,
-    putPlan,
+    createPlan,
+    updatePlan,
     deletePlan
-}  from '../controllers/planController.js'
-
-const router = Router();
+}  = require('../controllers/planController.js')
 
 router.get('/', getAllPlans)
 
 router.get('/:id', getPlanBy)
 
-router.post('/', postPlan)
+router.post('/', createPlan)
 
-router.put('/:id', putPlan)
+router.put('/:id', updatePlan)
 
 router.delete('/:id', deletePlan)
 
-export default router
+module.exports = router

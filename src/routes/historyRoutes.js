@@ -1,23 +1,22 @@
-import {Router} from 'express';
+const express = require('express');
+const router = express.Router();
 
-import{
+const {
     getAllHistorys,
     getHistoryBy,
-    postHistory,
-    putHistory,
+    createHistory,
+    updateHistory,
     deleteHistory
-}  from '../controllers/historyController.js'
-
-const router = Router();
+}  = require('../controllers/historyController.js')
 
 router.get('/', getAllHistorys)
 
 router.get('/:id', getHistoryBy)
 
-router.post('/', postHistory)
+router.post('/', createHistory)
 
-router.put('/:id', putHistory)
+router.put('/:id', updateHistory)
 
 router.delete('/:id', deleteHistory)
 
-export default router
+module.exports = router

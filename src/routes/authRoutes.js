@@ -1,13 +1,12 @@
-import {Router} from 'express';
+const express = require('express');
+const router = express.Router();
 
-import {
+const {
     login,
     logout
-} from '../helpers/authController.js';
-
-const router = Router();
+} = require('../helpers/authController.js');
 
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 
-export default router;
+module.exports = router
