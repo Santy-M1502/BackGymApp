@@ -6,7 +6,7 @@ exports.getAllHistorys = async (req, res) => {
 };
 
 exports.getHistoryBy = async (req, res) => {
-  const history = await exerciseService.getHistoryBy(req.params.id);
+  const history = await historyService.getHistoryById(req.params.id);
   res.json(history)
 }
 

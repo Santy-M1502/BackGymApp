@@ -2,7 +2,7 @@ const History = require('../models/history');
 const User = require('../models/user');
 const Exercise = require('../models/exercise');
 
-exports.getAllHistory = async () => {
+exports.getAllHistorys = async () => {
   return await History.findAll({
     include: [User, Exercise]
   });
