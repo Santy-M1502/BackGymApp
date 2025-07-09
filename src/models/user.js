@@ -7,6 +7,10 @@ const User = sequelize.define('User', {
     autoIncrement: true,
     primaryKey: true
   },
+  rol:{
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   contrasena:{
     type: DataTypes.STRING,
     allowNull: false

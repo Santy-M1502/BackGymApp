@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middlewares/authMiddleware');
 
 const {
     getAllPlans,
@@ -9,14 +10,14 @@ const {
     deletePlan
 }  = require('../controllers/planController.js')
 
-router.get('/', getAllPlans)
+router.get('/', auth, getAllPlans)
 
-router.get('/:id', getPlanBy)
+router.get('/:id', auth, getPlanBy)
 
-router.post('/', createPlan)
+router.post('/', auth, createPlan)
 
-router.put('/:id', updatePlan)
+router.put('/:id', auth, updatePlan)
 
-router.delete('/:id', deletePlan)
+router.delete('/:id', auth, deletePlan)
 
 module.exports = router
