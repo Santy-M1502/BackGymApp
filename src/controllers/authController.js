@@ -42,18 +42,21 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, contrasena } = req.body;
+    const { email, contrasena, rol } = req.body;
 
-    if (!email || !contrasena) {
+    if (!email || !contrasena || !rol) {
       return res.status(400).json({ msg: 'Faltan email o contrasena.' });
     }
 
     const user = await User.findOne({ where: { email } });
+    console.log(user)
     if (!user) {
       return res.status(401).json({ msg: 'Credenciales inválidas.' });
     }
 
-    console.log(user, user.contrasena)
+    if (user.rol != rol){
+      return res.status(401).json({ msg: 'Credenciales invalidas'})
+    }
 
     const match = await bcrypt.compare(contrasena, user.contrasena);
     if (!match) {
