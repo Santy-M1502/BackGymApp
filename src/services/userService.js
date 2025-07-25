@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const { User, Plan } = require('../models');
 
 exports.getAllUsers = async () => {
@@ -9,7 +10,9 @@ exports.getUserBy = async (id) => {
 };
 
 exports.createUser = async (data) => {
-  return await User.create(data);
+  const salt = await bcrypt.genSalt(10);
+  const hashPwd = await bcrypt.hash(data.contrasena, salt);
+  return await User.create({...data, contrasena : hashPwd});
 };
 
 exports.updateUser = async (id, data) =>{
