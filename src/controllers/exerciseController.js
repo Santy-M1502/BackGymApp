@@ -1,8 +1,18 @@
 const exerciseService = require('../services/exerciseService');
 
 exports.getAllExercises = async (req, res) => {
-  const exercises = await exerciseService.getAllExercises();
-  res.json(exercises);
+  try {
+    const filters = {
+      buscar: req.query.buscar || '',
+      musculo: req.query.musculo || ''
+    };
+
+    const exercises = await exerciseService.getAllExercises(filters);
+    res.json(exercises);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener ejercicios' });
+  }
 };
 
 exports.getExerciseBy = async (req, res) => {

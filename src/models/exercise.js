@@ -14,6 +14,12 @@ const Exercise = sequelize.define('Exercise', {
   musculo: {
     type: DataTypes.STRING,
     allowNull: false
-  }});
+  },
+  cantidad:{
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0,
+  }
+});
 
 module.exports = Exercise;
