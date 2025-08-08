@@ -11,7 +11,10 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5501',
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json())
 

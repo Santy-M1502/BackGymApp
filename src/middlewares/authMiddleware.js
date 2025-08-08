@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
   const token = header.split(' ')[1];
   try {
     const payload = jwt.verify(token, JWT_SECRET);
-    req.user = payload.id;
+    req.user = payload;
     next();
   } catch {
     res.status(401).json({ msg: 'Token inválido' });

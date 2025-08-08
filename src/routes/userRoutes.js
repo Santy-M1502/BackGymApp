@@ -7,10 +7,13 @@ const {
     getUserBy,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    getDays
 } = require('../controllers/userController');
 
 router.get('/', auth, getAllUsers)
+
+router.get('/dias-restantes', auth, getDays);
 
 router.get('/:id', auth, getUserBy)
 

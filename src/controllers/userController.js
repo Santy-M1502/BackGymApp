@@ -27,3 +27,21 @@ exports.deleteUser = async (req,res) => {
     res.json({message:'Cliente eliminado correctamente'})
 }
 
+exports.getDays = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userService.getDays(userId);
+
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    const expirado = user.diasRestantes <= 0;
+
+    res.json({
+      diasRestantes: user.diasRestantes,
+      expirado
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno' });
+  }
+};

@@ -33,13 +33,13 @@ exports.createHistory = async (data) => {
 };
 
 exports.updateHistory = async (id, data) =>{
-  const history = await Histoy.findByPk(id);
+  const history = await History.findByPk(id);
   if(!history) return null;
   return await history.update(data)
 };
 
 exports.deleteHistory = async(id) =>{
-  const history = await Histoy.findByPk(id);
+  const history = await History.findByPk(id);
   if(!history) return null
   await history.destroy();
   return true;
