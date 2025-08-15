@@ -19,8 +19,9 @@ const History = sequelize.define('History', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW
   },
-  notes: {
-    type: DataTypes.STRING
+  series: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 }, {
   tableName: 'historial_usuario',

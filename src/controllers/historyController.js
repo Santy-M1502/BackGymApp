@@ -11,9 +11,20 @@ exports.getHistoryBy = async (req, res) => {
 }
 
 exports.createHistory = async (req, res) => {
-  const history = await historyService.createHistory(req.body);
-  res.status(201).json(history);
+  try {
+    const data = {
+      ...req.body,
+      userId: req.user.id // <-- automáticamente del usuario logueado
+    };
+
+    const history = await historyService.createHistory(data);
+    res.status(201).json(history);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error al crear historial' });
+  }
 };
+
 
 exports.updateHistory = async (req, res) => {
   const history = await historyService.updateHistory(req.params.id, req.body);
