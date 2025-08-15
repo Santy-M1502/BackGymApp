@@ -44,6 +44,24 @@ exports.deleteUser = async(id) =>{
   return true;
 };
 
-exports.getDays = async(id) =>{
-  return await User.findByPk(id);
-}
+exports.getDays = async (id) => {
+  const user = await User.findByPk(id, {
+    include: [{ model: Plan, attributes: ['dias'] }] // Traemos solo los días del plan
+  });
+
+  if (!user) return null;
+
+  const hoy = new Date();
+  const inicio = new Date(user.createdAt); // O un campo "fechaInicio" si lo usás
+  const diasTotales = user.Plan.dias;
+
+  const diasPasados = Math.floor((hoy - inicio) / (1000 * 60 * 60 * 24));
+  const diasRestantes = Math.max(diasTotales - diasPasados, 0);
+
+  return {
+    diasRestantes,
+    expirado: diasRestantes <= 0
+  };
+};
+
+
