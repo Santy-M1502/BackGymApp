@@ -8,19 +8,20 @@ const {
     createUser,
     updateUser,
     deleteUser,
-    getDays
+    getDays,
+    getRoutine
 } = require('../controllers/userController');
 
-router.get('/', auth, getAllUsers)
+router.get('/', auth, getAllUsers);
 
 router.get('/dias-restantes', auth, getDays);
 
-router.get('/:id', auth, getUserBy)
+router.get('/:id', auth, getUserBy);
 
-router.post('/', auth, createUser)
+router.post('/', auth, createUser);
 
-router.put('/:id', auth, updateUser)
+router.put('/:id', auth, updateUser);
 
-router.delete('/:id', auth, deleteUser)
+router.delete('/:id', auth, deleteUser);
 
-module.exports = router
+module.exports = router;

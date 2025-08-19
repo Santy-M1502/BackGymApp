@@ -8,6 +8,7 @@ const planRoutes = require('./routes/planRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const authRoutes = require('./routes/authRoutes');
 const pagosRouter = require('./routes/pagosRouter');
+const routineRoutes = require('./routes/routineRoutes.js')
 
 const app = express();
 
@@ -36,5 +37,6 @@ app.use('/api/plan', planRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/', authRoutes)
 app.use('/api/pagos', pagosRouter);
+app.use('/api/rutina', routineRoutes)
 
 module.exports = app

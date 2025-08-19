@@ -45,3 +45,7 @@ exports.getDays = async (req, res) => {
     res.status(500).json({ message: 'Error interno' });
   }
 };
+
+exports.getRoutine = async (req, res) => {
+  
+}
