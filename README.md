@@ -17,7 +17,7 @@ Este proyecto es una aplicación web **backend** diseñada para gestionar y brin
 - JWT
 - Sequelize
   
-## 📦 Proyecto
+## 📦 Estructura del proyecto
 ```
 ├── .env
 ├── .gitignore
@@ -65,6 +65,7 @@ Este proyecto es una aplicación web **backend** diseñada para gestionar y brin
 ## 🚀 Objetivo
 
 Este sitio busca sencilles y facil uso de las herramientas para gestionar y registrar usuarios y ejercicios al/del gimnasio.
+
 
 
 
