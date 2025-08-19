@@ -17,9 +17,54 @@ Este proyecto es una aplicación web **backend** diseñada para gestionar y brin
 - JWT
 - Sequelize
 
+## 📦 Proyecto
+├── .env
+├── .gitignore
+├── estructura.txt
+├── package-lock.json
+├── package.json
+├── README.md
+└── src
+├── app.js
+├── server.js
+├── config
+│ └── db.js
+├── controllers
+│ ├── authController.js
+│ ├── exerciseController.js
+│ ├── historyController.js
+│ ├── planController.js
+│ ├── routineController.js
+│ └── userController.js
+├── database
+├── middlewares
+│ └── authMiddleware.js
+├── models
+│ ├── exercise.js
+│ ├── history.js
+│ ├── index.js
+│ ├── plan.js
+│ ├── rutina.js
+│ └── user.js
+├── routes
+│ ├── authRoutes.js
+│ ├── exerciseRoutes.js
+│ ├── historyRoutes.js
+│ ├── pagosRouter.js
+│ ├── planRoutes.js
+│ ├── routineRoutes.js
+│ └── userRoutes.js
+└── services
+├── exerciseService.js
+├── historyService.js
+├── planService.js
+├── routineService.js
+└── userService.js
+
 ## 🚀 Objetivo
 
 Este sitio busca sencilles y facil uso de las herramientas para gestionar y registrar usuarios y ejercicios al/del gimnasio.
+
 
 
 
