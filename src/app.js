@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const winston = require('winston');
 require('dotenv').config()
 const userRoutes = require('./routes/userRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
@@ -12,10 +13,23 @@ const routineRoutes = require('./routes/routineRoutes.js')
 
 const app = express();
 
+const logger = winston.createLogger({
+  level:'info',
+  format:winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports:[
+    new winston.transports.File({filename: 'logs/error.log', level:'error'}),
+    new winston.transports.File({filename:'logs/combined.log'}),
+  ],
+})
+
 // Middlewares
 app.use(cors({
-  origin: 'http://localhost:5501',
-  credentials: true
+  origin: process.env.FRONT_URL,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(morgan('dev'));
 app.use(express.json())

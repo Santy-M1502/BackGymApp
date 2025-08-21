@@ -7,12 +7,15 @@ const {
     getExerciseBy,
     createExercise,
     updateExercise,
-    deleteExercise
+    deleteExercise,
+    getExercisesSearch
 }  = require('../controllers/exerciseController.js') 
 
 router.get('/', auth, getAllExercises)
 
 router.get('/:id', auth, getExerciseBy)
+
+router.post('/search', auth, getExercisesSearch)
 
 router.post('/', auth, createExercise)
 

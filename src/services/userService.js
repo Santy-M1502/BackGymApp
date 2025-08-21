@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const { User, Plan } = require('../models');
+const { Op } = require("sequelize");
+
 
 exports.getAllUsers = async () => {
   return await User.findAll({ include: Plan });
@@ -62,6 +64,16 @@ exports.getDays = async (id) => {
     diasRestantes,
     expirado: diasRestantes <= 0
   };
+};
+
+exports.getUserBySearch = async (valor) => {
+  return await User.findAll({
+    where: {
+      email: {
+        [Op.iLike]: `%${valor}%`
+      }
+    }
+  });
 };
 
 

@@ -8,7 +8,8 @@ const {
     getRoutineByUser,
     createRoutine,
     updateRoutine,
-    deleteRoutine
+    deleteRoutine,
+    getRoutinesSearch
 }  = require('../controllers/routineController.js');
 
 router.get('/', auth, getAllRoutines);

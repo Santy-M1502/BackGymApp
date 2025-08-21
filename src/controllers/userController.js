@@ -46,6 +46,19 @@ exports.getDays = async (req, res) => {
   }
 };
 
-exports.getRoutine = async (req, res) => {
-  
-}
+exports.getUsersSearch = async (req, res) => {
+  try {
+    const { valor } = req.body;
+    const users = await userService.getUserBySearch(valor);
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error en la búsqueda de usuarios" });
+  }
+};
+

@@ -37,3 +37,18 @@ exports.deleteExercise = async (req,res) => {
     res.json({message:'Cliente eliminado correctamente'})
 }
 
+exports.getExercisesSearch = async (req, res) => {
+  try {
+    const { valor } = req.body;
+    const exercises = await exerciseService.getExerciseBySearch(valor);
+
+    if (!exercises || exercises.length === 0) {
+      return res.status(404).json({ error: "Ejercicio no encontrado" });
+    }
+
+    res.json(exercises);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error en la búsqueda de ejercicios" });
+  }
+};

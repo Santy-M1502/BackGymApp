@@ -36,3 +36,13 @@ exports.deleteExercise = async(id) =>{
   await exercise.destroy();
   return true;
 };
+
+exports.getExerciseBySearch = async (valor) => {
+  return await Exercise.findAll({
+    where: {
+      nombre: {
+        [Op.iLike]: `%${valor}%`
+      }
+    }
+  });
+};

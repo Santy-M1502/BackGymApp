@@ -9,10 +9,13 @@ const {
     updateUser,
     deleteUser,
     getDays,
-    getRoutine
+    getRoutine,
+    getUsersSearch
 } = require('../controllers/userController');
 
 router.get('/', auth, getAllUsers);
+
+router.post('/search', auth, getUsersSearch)
 
 router.get('/dias-restantes', auth, getDays);
 

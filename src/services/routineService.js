@@ -1,6 +1,7 @@
 const Routine = require('../models/rutina');
 const User = require('../models/user');
 const Exercise = require('../models/exercise');
+const { Op } = require("sequelize");
 
 exports.getAllRoutines = async () => {
   return await Routine.findAll({
@@ -14,7 +15,6 @@ exports.getRoutineById = async (id) => {
   });
 };
 
-// NUEVO: rutina por usuario
 exports.getRoutineByUserId = async (userId) => {
   return await Routine.findAll({
     where: { usuarioId: userId },
