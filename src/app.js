@@ -3,6 +3,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const winston = require('winston');
 require('dotenv').config()
+const cookieParser = require('cookie-parser');
 const userRoutes = require('./routes/userRoutes');
 const exerciseRoutes = require('./routes/exerciseRoutes');
 const planRoutes = require('./routes/planRoutes');
@@ -26,10 +27,12 @@ const logger = winston.createLogger({
 })
 
 // Middlewares
+app.use(cookieParser());
 app.use(cors({
   origin: process.env.FRONT_URL,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 app.use(morgan('dev'));
 app.use(express.json())
@@ -49,7 +52,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/exercise', exerciseRoutes);
 app.use('/api/plan', planRoutes);
 app.use('/api/history', historyRoutes);
-app.use('/', authRoutes)
+app.use('/api/auth', authRoutes)
 app.use('/api/pagos', pagosRouter);
 app.use('/api/rutina', routineRoutes)
 

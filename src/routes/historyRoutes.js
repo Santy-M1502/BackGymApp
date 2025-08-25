@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middlewares/authMiddleware');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 const {
     getAllHistorys,
@@ -10,14 +10,14 @@ const {
     deleteHistory
 }  = require('../controllers/historyController.js')
 
-router.get('/', auth, getAllHistorys)
+router.get('/', verifyToken, getAllHistorys)
 
-router.get('/:id', auth, getHistoryBy)
+router.get('/:id', verifyToken, getHistoryBy)
 
-router.post('/', auth, createHistory)
+router.post('/', verifyToken, createHistory)
 
-router.put('/:id', auth, updateHistory)
+router.put('/:id', verifyToken, updateHistory)
 
-router.delete('/:id', auth, deleteHistory)
+router.delete('/:id', verifyToken, deleteHistory)
 
 module.exports = router

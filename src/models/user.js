@@ -47,6 +47,10 @@ const User = sequelize.define('User', {
   },
   diasRestantes: {
     type: DataTypes.INTEGER
+  },
+  refreshToken:{
+    type: DataTypes.STRING,
+    allowNull:true
   }
 }, {
   timestamps: true

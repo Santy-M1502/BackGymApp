@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middlewares/authMiddleware');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 const {
     getAllPlans,
@@ -10,14 +10,14 @@ const {
     deletePlan
 }  = require('../controllers/planController.js')
 
-router.get('/', auth, getAllPlans)
+router.get('/', verifyToken, getAllPlans)
 
-router.get('/:id', auth, getPlanBy)
+router.get('/:id', verifyToken, getPlanBy)
 
-router.post('/', auth, createPlan)
+router.post('/', verifyToken, createPlan)
 
-router.put('/:id', auth, updatePlan)
+router.put('/:id', verifyToken, updatePlan)
 
-router.delete('/:id', auth, deletePlan)
+router.delete('/:id', verifyToken, deletePlan)
 
 module.exports = router

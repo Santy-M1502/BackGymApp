@@ -1,25 +1,33 @@
 // src/controllers/authController.js
+const { User } = require("../models");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const { User }      = require('../models');
-const bcrypt        = require('bcrypt');
-const jwt           = require('jsonwebtoken');
-const { JWT_SECRET }= process.env;
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
+// ====================== HELPERS ======================
+const generateAccessToken = (user) => 
+  jwt.sign({ id: user.id, rol: user.rol }, JWT_SECRET, { expiresIn: "15m" });
+
+const generateRefreshToken = (user) => 
+  jwt.sign({ id: user.id }, JWT_REFRESH_SECRET, { expiresIn: "7d" });
+
+const verifyRefreshToken = (token) => jwt.verify(token, JWT_REFRESH_SECRET);
+
+// ====================== REGISTER ======================
 exports.register = async (req, res) => {
   try {
-    const { email, contrasena, nombre, apellido, dni, telefono, diasRestantes, rol } = req.body;
+    const { email, contrasena, nombre, apellido, dni, telefono, diasRestantes } = req.body;
 
-    if (!nombre || !email || !contrasena || !apellido || !dni || !telefono || !diasRestantes || !rol) {
-      return res.status(400).json({ msg: 'Faltan campos obligatorios.' });
+    if (!nombre || !email || !contrasena || !apellido || !dni || !telefono || !diasRestantes) {
+      return res.status(400).json({ msg: "Faltan campos obligatorios." });
     }
 
     const existe = await User.findOne({ where: { email } });
-    if (existe) {
-      return res.status(409).json({ msg: 'El email ya está registrado.' });
-    }
+    if (existe) return res.status(409).json({ msg: "El email ya está registrado." });
 
-    const salt    = await bcrypt.genSalt(10);
-    const hashPwd = await bcrypt.hash(contrasena, salt);
+    const hashPwd = await bcrypt.hash(contrasena, 10);
 
     const user = await User.create({
       nombre,
@@ -29,44 +37,112 @@ exports.register = async (req, res) => {
       dni,
       telefono,
       diasRestantes,
-      rol
+      rol: "socio"
     });
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
-    res.status(201).json({ token });
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7*24*60*60*1000
+    }).status(201).json({
+      accessToken,
+      user: { id: user.id, nombre: user.nombre, rol: user.rol }
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: 'Error interno al registrar.' });
+    res.status(500).json({ msg: "Error interno al registrar." });
   }
 };
 
+// ====================== LOGIN ======================
 exports.login = async (req, res) => {
   try {
-    const { email, contrasena, rol } = req.body;
-
-    if (!email || !contrasena || !rol) {
-      return res.status(400).json({ msg: 'Faltan email o contrasena.' });
-    }
+    const { email, contrasena } = req.body;
+    if (!email || !contrasena) return res.status(400).json({ msg: "Faltan datos" });
 
     const user = await User.findOne({ where: { email } });
-    
-    if (!user) {
-      return res.status(401).json({ msg: 'Credenciales inválidas.' });
-    }
-
-    if (user.rol != rol){
-      return res.status(401).json({ msg: 'Credenciales invalidas'})
-    }
+    if (!user) return res.status(401).json({ msg: "Email o contraseña incorrecta" });
 
     const match = await bcrypt.compare(contrasena, user.contrasena);
-    if (!match) {
-      return res.status(401).json({ msg: 'Credenciales inválidas.' });
-    }
+    if (!match) return res.status(401).json({ msg: "Email o contraseña incorrecta" });
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    user.refreshToken = refreshToken;
+    await user.save();
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7*24*60*60*1000
+    }).json({
+      accessToken,
+      user: { id: user.id, nombre: user.nombre, rol: user.rol }
+    });
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: 'Error interno al hacer login.' });
+    res.status(500).json({ msg: "Error interno" });
+  }
+};
+
+// ====================== REFRESH TOKEN ======================
+exports.refresh = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(401).json({ msg: "Falta refresh token." });
+
+    const payload = verifyRefreshToken(refreshToken);
+
+    const user = await User.findByPk(payload.id);
+    if (!user || user.refreshToken !== refreshToken) {
+      return res.status(403).json({ msg: "Refresh token inválido." });
+    }
+
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+
+    user.refreshToken = newRefreshToken;
+    await user.save();
+
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 7*24*60*60*1000
+    }).json({ accessToken: newAccessToken });
+    
+  } catch (error) {
+    console.log("Refresh token error:", err.message);
+    res.status(403).json({ msg: "Refresh token inválido o expirado." });
+  }
+};
+
+// ====================== LOGOUT ======================
+exports.logout = async (req, res) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.status(400).json({ msg: "Falta refresh token." });
+
+    const user = await User.findOne({ where: { refreshToken } });
+    if (!user) return res.status(400).json({ msg: "Token no encontrado." });
+
+    user.refreshToken = null;
+    await user.save();
+
+    res.clearCookie("refreshToken").json({ msg: "Logout exitoso." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error en logout." });
   }
 };

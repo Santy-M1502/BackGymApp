@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middlewares/authMiddleware');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 const {
     getAllRoutines,
@@ -12,14 +12,14 @@ const {
     getRoutinesSearch
 }  = require('../controllers/routineController.js');
 
-router.get('/', auth, getAllRoutines);
+router.get('/', verifyToken, getAllRoutines);
 
-router.get('/:id', auth, getRoutineById);
+router.get('/:id', verifyToken, getRoutineById);
 
-router.get('/usuario/:id', auth, getRoutineByUser);
+router.get('/usuario/:id', verifyToken, getRoutineByUser);
 
-router.post('/', auth, createRoutine);
-router.put('/:id', auth, updateRoutine);
-router.delete('/:id', auth, deleteRoutine);
+router.post('/', verifyToken, createRoutine);
+router.put('/:id', verifyToken, updateRoutine);
+router.delete('/:id', verifyToken, deleteRoutine);
 
 module.exports = router;

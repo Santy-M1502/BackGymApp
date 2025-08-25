@@ -1,15 +1,18 @@
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = process.env;
+const JWT_SECRET = process.env.JWT_SECRET;
 
-module.exports = (req, res, next) => {
-  const header = req.headers.authorization;
-  if (!header) return res.status(401).json({ msg: 'Sin token' });
-  const token = header.split(' ')[1];
+exports.verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  if (!authHeader) return res.status(401).json({ msg: "Token faltante" });
+
+  const token = authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ msg: "Token inválido" });
+
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
-    req.user = payload;
+    req.user = jwt.verify(token, JWT_SECRET);
     next();
-  } catch {
-    res.status(401).json({ msg: 'Token inválido' });
+  } catch (err){
+      console.log("Token verification error:", err.message);
+    return res.status(401).json({ msg: "Token inválido o expirado" });
   }
 };

@@ -34,7 +34,6 @@ exports.updateUser = async (id, data) => {
     data.idPlan = Number(data.idPlan);
     if (isNaN(data.idPlan)) throw new Error('idPlan inválido');
   }
-
   return await user.update(data);
 };
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middlewares/authMiddleware');
+const { verifyToken } = require('../middlewares/authMiddleware');
 
 const {
     getAllUsers,
@@ -9,22 +9,21 @@ const {
     updateUser,
     deleteUser,
     getDays,
-    getRoutine,
     getUsersSearch
 } = require('../controllers/userController');
 
-router.get('/', auth, getAllUsers);
+router.get('/', verifyToken, getAllUsers);
 
-router.post('/search', auth, getUsersSearch)
+router.post('/search', verifyToken, getUsersSearch)
 
-router.get('/dias-restantes', auth, getDays);
+router.get('/dias-restantes', verifyToken, getDays);
 
-router.get('/:id', auth, getUserBy);
+router.get('/:id', verifyToken, getUserBy);
 
-router.post('/', auth, createUser);
+router.post('/', verifyToken, createUser);
 
-router.put('/:id', auth, updateUser);
+router.put('/:id', verifyToken, updateUser);
 
-router.delete('/:id', auth, deleteUser);
+router.delete('/:id', verifyToken, deleteUser);
 
 module.exports = router;
