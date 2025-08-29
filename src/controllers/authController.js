@@ -46,12 +46,22 @@ exports.register = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
+    // Cookies separadas para cada token
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000 // 15 min
+    });
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 7*24*60*60*1000
-    }).status(201).json({
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
+    });
+
+    res.status(201).json({
       accessToken,
       user: { id: user.id, nombre: user.nombre, rol: user.rol }
     });
@@ -80,12 +90,21 @@ exports.login = async (req, res) => {
     user.refreshToken = refreshToken;
     await user.save();
 
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000
+    });
+
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 7*24*60*60*1000
-    }).json({
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({
       accessToken,
       user: { id: user.id, nombre: user.nombre, rol: user.rol }
     });
@@ -115,14 +134,23 @@ exports.refresh = async (req, res) => {
     user.refreshToken = newRefreshToken;
     await user.save();
 
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 15 * 60 * 1000
+    });
+
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: false,
       sameSite: "lax",
-      maxAge: 7*24*60*60*1000
-    }).json({ accessToken: newAccessToken });
-    
-  } catch (error) {
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({ accessToken: newAccessToken });
+
+  } catch (err) {
     console.log("Refresh token error:", err.message);
     res.status(403).json({ msg: "Refresh token inválido o expirado." });
   }
@@ -140,9 +168,22 @@ exports.logout = async (req, res) => {
     user.refreshToken = null;
     await user.save();
 
-    res.clearCookie("refreshToken").json({ msg: "Logout exitoso." });
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ msg: "Logout exitoso." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error en logout." });
   }
+};
+
+// ====================== VALIDATE ======================
+exports.validate = async (req, res) => {
+  const token = req.cookies?.accessToken;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(401);
+    res.json({ valid: true, user });
+  });
 };
