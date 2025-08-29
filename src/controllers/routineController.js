@@ -12,7 +12,7 @@ exports.getRoutineById = async (req, res) => {
 };
 
 exports.getRoutineByUser = async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.params.id;
   const routines = await routineService.getRoutineByUserId(userId);
   res.json(routines);
 };

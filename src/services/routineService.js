@@ -18,9 +18,10 @@ exports.getRoutineById = async (id) => {
 exports.getRoutineByUserId = async (userId) => {
   return await Routine.findAll({
     where: { usuarioId: userId },
-    include: [Exercise] 
+    include: [User, Exercise]
   });
 };
+
 
 exports.createRoutine = async (data) => {
 
